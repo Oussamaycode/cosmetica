@@ -9,11 +9,19 @@ class AuthController extends Controller
     public function register(Request $request){
         $request->validate(['name'=>['required','string','max:50'],
                             'email'=>['required','string','emial','max:255','unique:users,email'],
-                            'password'=>['required','string','min:6']
+                            'password'=>['required','string','min:6'],
+                            'role'=>['required','string']
                           ]);
 
+        if(User::count()===0){
+            $role='admin';
+        }
+        else{
+            $role=$request->role;
+        }
         $user=User::create(['name'=>$request->name,
                       'email'=>$request->email,
+                      'role'=>$role,
                       'password'=>Hash::make($request->password),
         ]);
 
