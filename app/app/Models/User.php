@@ -58,4 +58,9 @@ class User extends Authenticatable implements JWTSubject
             'password' => 'hashed',
         ];
     }
+
+
+    public function commandes(){
+        return $this->hasMany(Commande::class);
+    }
 }

@@ -13,7 +13,7 @@ class CommandeController extends Controller
      */
     public function index()
     {
-        //
+    
     }
 
     /**
@@ -21,7 +21,10 @@ class CommandeController extends Controller
      */
     public function store(StoreCommandeRequest $request)
     {
-        //
+        $commande=Commande::create($request->all);
+
+        
+        return response->json(['commande'=>$commande],200);
     }
 
     /**
@@ -43,6 +46,12 @@ class CommandeController extends Controller
     /**
      * Remove the specified resource from storage.
      */
+
+    public function annuler( Commande $commande){
+        $commande->update(['status'=>'anuulé']);
+        return response()->json(['status'=>$commande->status],200);
+    }
+
     public function destroy(Commande $commande)
     {
         //
