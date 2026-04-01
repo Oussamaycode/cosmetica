@@ -20,11 +20,30 @@ class ProduitController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreProduitRequest $request)
+
+
+    public function store(StoreOrderRequest $request)
     {
-        $product=Product::create($request->all);
-        return response()->json(['product'=>$product,201]);
+        
+        $validated = $request->validated();
+
+      
+        $order = Order::create(['user_id' => auth()->id()]);
+
+        // 3. Process products (slugs are already verified to exist)
+        foreach ($validated['items'] as $item) {
+            $product = Product::where('slug', $item['slug'])->first();
+            
+            $order->products()->attach($product->id, [
+                'quantity' => $item['quantity'],
+                'price' => $product->price,
+            ]);
+        }
+
+        return response()->json(['message' => 'Order created!'], 201);
     }
+
+
 
     /**
      * Display the specified resource.
